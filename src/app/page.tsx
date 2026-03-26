@@ -70,9 +70,7 @@ export default function DashboardPage() {
 
 
   return (
-    <AppLayout>
       <div className="space-y-6">
-        {/* Карточки статистики */}
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} lg={6}>
             <Card>

@@ -3,11 +3,12 @@
 import React, { useState } from "react";
 import { Button, Card, Input, Pagination, Select, Space, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { SearchOutlined, UserAddOutlined } from "@ant-design/icons";
+import { SearchOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
 import { citizensData } from "@/lib/mock-data";
 import type { Citizen, MaritalStatus } from "@/types/citizen";
 import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
+import CitizenDrawer from "@/components/CitizenDrawer";
 
 const { Option } = Select;
 
@@ -33,14 +34,16 @@ export default function CitizensPage() {
   const [maritalStatusFilter, setMaritalStatusFilter] = useState<MaritalStatus | undefined>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedCitizen, setSelectedCitizen] = useState<Citizen | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Фильтрация данных
   const filteredData = citizensData.filter((citizen) => {
-    const matchesSearch = search === '' || 
+    const matchesSearch = search === '' ||
       `${citizen.surname} ${citizen.name} ${citizen.patronymic}`
         .toLowerCase()
         .includes(search.toLowerCase());
-    
+
     const matchesStatus = !statusFilter || citizen.status === statusFilter;
     const matchesGender = !genderFilter || citizen.gender === genderFilter;
     const matchesMaritalStatus = !maritalStatusFilter || citizen.maritalStatus === maritalStatusFilter;
@@ -59,9 +62,12 @@ export default function CitizensPage() {
       dataIndex: 'fullName',
       key: 'fullName',
       render: (_: unknown, record: Citizen) => (
-        <span className="font-medium text-gray-900">
-          {record.surname} {record.name} {record.patronymic}
-        </span>
+        <Space>
+          <UserOutlined className="text-gray-400" />
+          <span className="font-medium text-gray-900">
+            {record.surname} {record.name} {record.patronymic}
+          </span>
+        </Space>
       ),
       sorter: (a, b) => `${a.surname} ${a.name}`.localeCompare(`${b.surname} ${b.name}`),
     },
@@ -138,7 +144,8 @@ export default function CitizensPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <>
+      <div className="space-y-4">
         {/* Фильтры */}
         <Card>
           <Space wrap size="middle" className="w-full">
@@ -153,7 +160,7 @@ export default function CitizensPage() {
               style={{ width: 250 }}
               allowClear
             />
-            
+
             <Select
               placeholder="Статус"
               value={statusFilter}
@@ -212,15 +219,20 @@ export default function CitizensPage() {
         </Card>
 
         {/* Таблица */}
-        <Card
-          title={`Картотека граждан (${total} записей)`}
-        >
+        <Card title={`Картотека граждан (${total} записей)`}>
           <Table
             columns={columns}
             dataSource={paginatedData}
             rowKey="id"
             pagination={false}
             scroll={{ x: 1200 }}
+            onRow={(record) => ({
+              onClick: () => {
+                setSelectedCitizen(record);
+                setIsDrawerOpen(true);
+              },
+              className: 'cursor-pointer hover:bg-gray-50',
+            })}
           />
 
           {/* Пагинация */}
@@ -240,5 +252,16 @@ export default function CitizensPage() {
           </div>
         </Card>
       </div>
+
+      {/* Drawer с информацией о гражданине */}
+      <CitizenDrawer
+        open={isDrawerOpen}
+        citizen={selectedCitizen}
+        onClose={() => {
+          setIsDrawerOpen(false);
+          setSelectedCitizen(null);
+        }}
+      />
+    </>
   );
 }
