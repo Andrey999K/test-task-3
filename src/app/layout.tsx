@@ -4,6 +4,7 @@ import { ConfigProvider, theme } from "antd";
 import ruRU from "antd/locale/ru_RU";
 import "./globals.css";
 import { ReactNode } from "react";
+import AppLayout from "@/components/AppLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -53,7 +54,7 @@ export default function RootLayout({
             },
           }}
         >
-          {children}
+          <AppLayout>{children}</AppLayout>
         </ConfigProvider>
       </body>
     </html>

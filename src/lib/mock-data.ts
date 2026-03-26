@@ -9,6 +9,7 @@ function generateCitizen(): Citizen {
   const gender = faker.helpers.arrayElement(['male', 'female'] as const);
   const firstName = faker.person.firstName(gender);
   const lastName = faker.person.lastName(gender);
+  const maritalStatus = faker.helpers.arrayElement(['single', 'married', 'divorced', 'widowed'] as const);
 
   return {
     id: faker.string.uuid(),
@@ -20,6 +21,7 @@ function generateCitizen(): Citizen {
     phone: faker.phone.number({ style: 'international' }),
     email: faker.internet.email(),
     address: `${faker.location.city()}, ${faker.location.street()}, д. ${faker.string.numeric(3)}, кв. ${faker.string.numeric(2)}`,
+    maritalStatus,
     status: faker.helpers.arrayElement(['active', 'archived', 'pending'] as const),
   };
 }

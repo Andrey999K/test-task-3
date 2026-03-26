@@ -82,7 +82,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           onClick={handleMenuClick}
         />
       </Sider>
-      <Layout className="ml-[100px] transition-all duration-200" style={{ marginLeft: 0 }}>
+      <Layout className="transition-all duration-200" style={{ marginLeft: 0 }}>
         <Header className="px-6 flex items-center justify-between bg-white border-b border-gray-200">
           <h1 className="text-lg font-medium text-gray-800">
             {pathname === '/' && 'Панель управления'}

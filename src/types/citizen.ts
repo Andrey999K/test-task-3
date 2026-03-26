@@ -1,3 +1,6 @@
+// Семейное положение
+export type MaritalStatus = 'single' | 'married' | 'divorced' | 'widowed';
+
 export interface Citizen {
   id: string;
   surname: string;
@@ -10,9 +13,11 @@ export interface Citizen {
   email?: string;
 
   address?: string;
+  
+  maritalStatus?: MaritalStatus;
 
   status: 'active' | 'archived' | 'pending';
-  
+
   // Дополнительные поля (для расширения)
   [key: string]: unknown;
 }

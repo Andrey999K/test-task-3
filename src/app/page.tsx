@@ -5,7 +5,6 @@ import { Card, Col, Progress, Row, Statistic, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { CheckCircleOutlined, ClockCircleOutlined, InboxOutlined, TeamOutlined } from "@ant-design/icons";
 import { citizensData } from "@/lib/mock-data";
-import AppLayout from "@/components/AppLayout";
 import type { Citizen } from "@/types/citizen";
 import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
@@ -177,6 +176,5 @@ export default function DashboardPage() {
           </Col>
         </Row>
       </div>
-    </AppLayout>
   );
 }
