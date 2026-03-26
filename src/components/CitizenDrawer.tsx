@@ -1,11 +1,12 @@
 'use client';
 
-import React from "react";
+import React, { useState } from "react";
 import type { DrawerProps } from "antd";
-import { Avatar, Button, Card, Descriptions, Drawer, Space, Tag, Typography } from "antd";
+import { Avatar, Button, Card, Descriptions, Drawer, Form, Input, Select, Space, Tag, Typography } from "antd";
 import {
   BankOutlined,
   BookOutlined,
+  CloseOutlined,
   DeleteOutlined,
   EditOutlined,
   FileTextOutlined,
@@ -14,6 +15,7 @@ import {
   LaptopOutlined,
   ManOutlined,
   PhoneOutlined,
+  SaveOutlined,
   UserOutlined,
   WomanOutlined,
 } from "@ant-design/icons";
@@ -22,10 +24,12 @@ import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
 
 const { Text } = Typography;
+const { TextArea } = Input;
 
 interface CitizenDrawerProps extends Omit<DrawerProps, 'children'> {
   citizen: Citizen | null;
   onClose: () => void;
+  onSave?: (citizen: Citizen) => void;
 }
 
 const statusConfig: Record<Citizen['status'], { color: string; label: string }> = {
@@ -33,6 +37,44 @@ const statusConfig: Record<Citizen['status'], { color: string; label: string }> 
   pending: { color: 'orange', label: 'На проверке' },
   archived: { color: 'gray', label: 'Архив' },
 };
+
+const maritalStatusOptions = [
+  { value: 'single', label: 'Не женат/не замужем' },
+  { value: 'married', label: 'Женат/замужем' },
+  { value: 'divorced', label: 'Разведён(а)' },
+  { value: 'widowed', label: 'Вдовец/вдова' },
+];
+
+const genderOptions = [
+  { value: 'male', label: 'Мужской' },
+  { value: 'female', label: 'Женский' },
+];
+
+const citizenshipOptions = [
+  { value: 'РФ', label: 'РФ' },
+  { value: 'СНГ', label: 'СНГ' },
+  { value: 'Другое', label: 'Другое' },
+];
+
+const nationalityOptions = [
+  { value: 'Русский', label: 'Русский' },
+  { value: 'Татарин', label: 'Татарин' },
+  { value: 'Украинец', label: 'Украинец' },
+  { value: 'Башкир', label: 'Башкир' },
+  { value: 'Чуваш', label: 'Чуваш' },
+  { value: 'Другая', label: 'Другая' },
+];
+
+const bloodTypeOptions = [
+  { value: 'I+', label: 'I+' },
+  { value: 'I-', label: 'I-' },
+  { value: 'II+', label: 'II+' },
+  { value: 'II-', label: 'II-' },
+  { value: 'III+', label: 'III+' },
+  { value: 'III-', label: 'III-' },
+  { value: 'IV+', label: 'IV+' },
+  { value: 'IV-', label: 'IV-' },
+];
 
 const maritalStatusConfig: Record<MaritalStatus, string> = {
   single: 'Не женат/не замужем',
@@ -186,32 +228,74 @@ function PropertyCard({ prop }: { prop: Property }) {
   );
 }
 
-export default function CitizenDrawer({ citizen, onClose, ...drawerProps }: CitizenDrawerProps) {
+export default function CitizenDrawer({ citizen, onClose, onSave, ...drawerProps }: CitizenDrawerProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [form] = Form.useForm();
+  const [editedCitizen, setEditedCitizen] = useState<Citizen | null>(null);
+
   if (!citizen) {
     return null;
   }
 
   const status = statusConfig[citizen.status];
+  const displayCitizen = isEditing && editedCitizen ? editedCitizen : citizen;
+
+  const handleEdit = () => {
+    setEditedCitizen({ ...citizen });
+    form.setFieldsValue({
+      ...citizen,
+      birthDate: citizen.birthDate,
+    });
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditedCitizen(null);
+    form.resetFields();
+  };
+
+  const handleSave = async () => {
+    try {
+      const values = await form.validateFields();
+      const updatedCitizen = { ...citizen, ...values };
+      onSave?.(updatedCitizen);
+      setIsEditing(false);
+      setEditedCitizen(null);
+      form.resetFields();
+    } catch (error) {
+      console.error('Validation failed:', error);
+    }
+  };
 
   return (
     <Drawer
       title={
         <Space>
           <UserOutlined />
-          <span>{citizen.surname} {citizen.name} {citizen.patronymic}</span>
+          <span>{displayCitizen.surname} {displayCitizen.name} {displayCitizen.patronymic}</span>
+          {isEditing && <Tag color="blue">Редактирование</Tag>}
         </Space>
       }
       size="large"
       onClose={onClose}
       extra={
-        <Space>
-          <Button type="primary" icon={<EditOutlined />}>Редактировать</Button>
-          <Button icon={<DeleteOutlined />}>Удалить</Button>
-        </Space>
+        isEditing ? (
+          <Space>
+            <Button icon={<CloseOutlined />} onClick={handleCancel}>Отмена</Button>
+            <Button type="primary" icon={<SaveOutlined />} onClick={handleSave}>Сохранить</Button>
+          </Space>
+        ) : (
+          <Space>
+            <Button type="primary" icon={<EditOutlined />} onClick={handleEdit}>Редактировать</Button>
+            <Button danger icon={<DeleteOutlined />}>Удалить</Button>
+          </Space>
+        )
       }
       {...drawerProps}
     >
-      <Space orientation="vertical" size="middle" className="w-full">
+      <Form form={form} layout="vertical">
+        <Space orientation="vertical" size="middle" className="w-full">
         {/* Профиль */}
         <Card className="bg-gradient-to-r from-blue-50 to-indigo-50">
           <Space size="large" className="w-full">
@@ -243,38 +327,144 @@ export default function CitizenDrawer({ citizen, onClose, ...drawerProps }: Citi
 
         {/* Личные данные */}
         <Descriptions title="Личные данные" bordered column={2} size="small">
-          <Descriptions.Item label="Дата рождения" span={1}>
-            {formatDate(citizen.birthDate)}
+          <Descriptions.Item label="Фамилия">
+            {isEditing ? (
+              <Form.Item name="surname" noStyle>
+                <Input />
+              </Form.Item>
+            ) : displayCitizen.surname}
           </Descriptions.Item>
-          <Descriptions.Item label="Место рождения" span={1}>
-            {citizen.birthPlace || '—'}
+          <Descriptions.Item label="Имя">
+            {isEditing ? (
+              <Form.Item name="name" noStyle>
+                <Input />
+              </Form.Item>
+            ) : displayCitizen.name}
+          </Descriptions.Item>
+          <Descriptions.Item label="Отчество">
+            {isEditing ? (
+              <Form.Item name="patronymic" noStyle>
+                <Input />
+              </Form.Item>
+            ) : displayCitizen.patronymic}
+          </Descriptions.Item>
+          <Descriptions.Item label="Дата рождения">
+            {isEditing ? (
+              <Form.Item name="birthDate" noStyle>
+                <Input type="date" />
+              </Form.Item>
+            ) : formatDate(displayCitizen.birthDate)}
+          </Descriptions.Item>
+          <Descriptions.Item label="Место рождения" span={2}>
+            {isEditing ? (
+              <Form.Item name="birthPlace" noStyle>
+                <Input />
+              </Form.Item>
+            ) : displayCitizen.birthPlace || '—'}
+          </Descriptions.Item>
+          <Descriptions.Item label="Пол" span={2}>
+            {isEditing ? (
+              <Form.Item name="gender" noStyle>
+                <Select options={genderOptions} style={{ width: 150 }} />
+              </Form.Item>
+            ) : genderConfig[displayCitizen.gender]}
           </Descriptions.Item>
           <Descriptions.Item label="Семейное положение" span={2}>
-            {citizen.maritalStatus ? maritalStatusConfig[citizen.maritalStatus] : '—'}
+            {isEditing ? (
+              <Form.Item name="maritalStatus" noStyle>
+                <Select options={maritalStatusOptions} style={{ width: 200 }} />
+              </Form.Item>
+            ) : displayCitizen.maritalStatus ? maritalStatusConfig[displayCitizen.maritalStatus] : '—'}
           </Descriptions.Item>
         </Descriptions>
 
         {/* Контактные данные */}
         <Descriptions title="Контактные данные" bordered column={2} size="small">
-          <Descriptions.Item label="Телефон" span={1}>
-            {citizen.phone ? (
-              <a href={`tel:${citizen.phone.replace(/\D/g, '')}`}>
-                {formatPhone(citizen.phone)}
+          <Descriptions.Item label="Телефон">
+            {isEditing ? (
+              <Form.Item name="phone" noStyle>
+                <Input />
+              </Form.Item>
+            ) : displayCitizen.phone ? (
+              <a href={`tel:${displayCitizen.phone.replace(/\D/g, '')}`}>
+                {formatPhone(displayCitizen.phone)}
               </a>
             ) : '—'}
           </Descriptions.Item>
-          <Descriptions.Item label="Email" span={1}>
-            {citizen.email ? (
-              <a href={`mailto:${citizen.email}`}>{citizen.email}</a>
+          <Descriptions.Item label="Email">
+            {isEditing ? (
+              <Form.Item name="email" noStyle>
+                <Input />
+              </Form.Item>
+            ) : displayCitizen.email ? (
+              <a href={`mailto:${displayCitizen.email}`}>{displayCitizen.email}</a>
             ) : '—'}
           </Descriptions.Item>
           <Descriptions.Item label="Адрес регистрации" span={2}>
-            {citizen.address || '—'}
+            {isEditing ? (
+              <Form.Item name="address" noStyle>
+                <Input />
+              </Form.Item>
+            ) : displayCitizen.address || '—'}
           </Descriptions.Item>
           <Descriptions.Item label="Фактический адрес" span={2}>
-            {citizen.registrationAddress !== citizen.address ? citizen.registrationAddress : '—'}
+            {isEditing ? (
+              <Form.Item name="registrationAddress" noStyle>
+                <Input />
+              </Form.Item>
+            ) : displayCitizen.registrationAddress !== displayCitizen.address ? displayCitizen.registrationAddress : '—'}
           </Descriptions.Item>
         </Descriptions>
+
+        {/* Дополнительные сведения */}
+        {isEditing ? (
+          <Descriptions title="Дополнительные сведения" bordered column={2} size="small">
+            <Descriptions.Item label="Гражданство">
+              <Form.Item name="citizenship" noStyle>
+                <Select options={citizenshipOptions} style={{ width: 150 }} allowClear />
+              </Form.Item>
+            </Descriptions.Item>
+            <Descriptions.Item label="Национальность">
+              <Form.Item name="nationality" noStyle>
+                <Select options={nationalityOptions} style={{ width: 150 }} allowClear />
+              </Form.Item>
+            </Descriptions.Item>
+            <Descriptions.Item label="Группа крови">
+              <Form.Item name="bloodType" noStyle>
+                <Select options={bloodTypeOptions} style={{ width: 100 }} allowClear />
+              </Form.Item>
+            </Descriptions.Item>
+            <Descriptions.Item label="Статус">
+              <Form.Item name="status" noStyle>
+                <Select 
+                  options={[
+                    { value: 'active', label: 'Активен' },
+                    { value: 'pending', label: 'На проверке' },
+                    { value: 'archived', label: 'Архив' },
+                  ]} 
+                  style={{ width: 150 }} 
+                />
+              </Form.Item>
+            </Descriptions.Item>
+          </Descriptions>
+        ) : (
+          <Descriptions title="Дополнительные сведения" bordered column={2} size="small">
+            <Descriptions.Item label="Гражданство">
+              {displayCitizen.citizenship || '—'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Национальность">
+              {displayCitizen.nationality || '—'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Группа крови">
+              {displayCitizen.bloodType || '—'}
+            </Descriptions.Item>
+            <Descriptions.Item label="Статус">
+              <Tag color={statusConfig[displayCitizen.status].color}>
+                {statusConfig[displayCitizen.status].label}
+              </Tag>
+            </Descriptions.Item>
+          </Descriptions>
+        )}
 
         {/* Документы */}
         <Card 
@@ -407,12 +597,17 @@ export default function CitizenDrawer({ citizen, onClose, ...drawerProps }: Citi
             )}
             {citizen.notes && (
               <Descriptions.Item label="Заметки">
-                {citizen.notes}
+                {isEditing ? (
+                  <Form.Item name="notes" noStyle>
+                    <TextArea rows={2} />
+                  </Form.Item>
+                ) : citizen.notes}
               </Descriptions.Item>
             )}
           </Descriptions>
         )}
       </Space>
+      </Form>
     </Drawer>
   );
 }
