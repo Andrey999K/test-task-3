@@ -10,8 +10,6 @@ import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
 import CitizenDrawer from "@/components/CitizenDrawer";
 
-const { Option } = Select;
-
 // Статусы для отображения
 const statusConfig = {
   active: { color: 'green', label: 'Активен' },
@@ -170,11 +168,12 @@ export default function CitizensPage() {
               }}
               style={{ width: 150 }}
               allowClear
-            >
-              <Option value="active">Активен</Option>
-              <Option value="pending">На проверке</Option>
-              <Option value="archived">Архив</Option>
-            </Select>
+              options={[
+                { value: 'active', label: 'Активен' },
+                { value: 'pending', label: 'На проверке' },
+                { value: 'archived', label: 'Архив' },
+              ]}
+            />
 
             <Select
               placeholder="Пол"
@@ -185,10 +184,11 @@ export default function CitizensPage() {
               }}
               style={{ width: 120 }}
               allowClear
-            >
-              <Option value="male">Мужской</Option>
-              <Option value="female">Женский</Option>
-            </Select>
+              options={[
+                { value: 'male', label: 'Мужской' },
+                { value: 'female', label: 'Женский' },
+              ]}
+            />
 
             <Select
               placeholder="Семейное положение"
@@ -199,12 +199,13 @@ export default function CitizensPage() {
               }}
               style={{ width: 180 }}
               allowClear
-            >
-              <Option value="single">Не женат/не замужем</Option>
-              <Option value="married">Женат/замужем</Option>
-              <Option value="divorced">Разведён(а)</Option>
-              <Option value="widowed">Вдовец/вдова</Option>
-            </Select>
+              options={[
+                { value: 'single', label: 'Не женат/не замужем' },
+                { value: 'married', label: 'Женат/замужем' },
+                { value: 'divorced', label: 'Разведён(а)' },
+                { value: 'widowed', label: 'Вдовец/вдова' },
+              ]}
+            />
 
             <Button onClick={handleResetFilters}>
               Сбросить
