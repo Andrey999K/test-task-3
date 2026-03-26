@@ -21,7 +21,7 @@ const menuItems: MenuProps['items'] = [
   {
     key: '/citizens',
     icon: <TeamOutlined />,
-    label: 'Картотека граждан',
+    label: 'Картотека',
   },
   {
     key: '/reports',
@@ -69,7 +69,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
       >
         <div className="h-16 flex items-center justify-center">
           {collapsed ? (
-            <TeamOutlined className="text-white text-xl" />
+            <span className="text-white text-xl font-semibold">ППК</span>
           ) : (
             <span className="text-white text-lg font-semibold">ППК РЕО</span>
           )}
@@ -80,6 +80,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           selectedKeys={[pathname]}
           items={menuItems}
           onClick={handleMenuClick}
+          style={{ width: '100%' }}
         />
       </Sider>
       <Layout className="transition-all duration-200" style={{ marginLeft: 0 }}>
