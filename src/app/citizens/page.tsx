@@ -5,31 +5,20 @@ import { Button, Card, Input, Pagination, Select, Space, Table, Tag } from "antd
 import type { ColumnsType } from "antd/es/table";
 import { SearchOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
 import { citizensData } from "@/lib/mock-data";
-import type { Citizen, MaritalStatus } from "@/types/citizen";
+import type { Citizen } from "@/types/citizen";
 import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
 import CitizenDrawer from "@/components/CitizenDrawer";
-
-// Статусы для отображения
-const statusConfig = {
-  active: { color: 'green', label: 'Активен' },
-  pending: { color: 'orange', label: 'На проверке' },
-  archived: { color: 'gray', label: 'Архив' },
-} as const;
-
-// Семейное положение для отображения
-const maritalStatusConfig = {
-  single: 'Не женат/не замужем',
-  married: 'Женат/замужем',
-  divorced: 'Разведён(а)',
-  widowed: 'Вдовец/вдова',
-} as const;
+import {
+  STATUS_CONFIG,
+  MARITAL_STATUS_CONFIG,
+} from "@/config/citizen-config";
 
 export default function CitizensPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<Citizen['status'] | undefined>();
   const [genderFilter, setGenderFilter] = useState<Citizen['gender'] | undefined>();
-  const [maritalStatusFilter, setMaritalStatusFilter] = useState<MaritalStatus | undefined>();
+  const [maritalStatusFilter, setMaritalStatusFilter] = useState<Citizen['maritalStatus'] | undefined>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [selectedCitizen, setSelectedCitizen] = useState<Citizen | null>(null);
@@ -111,8 +100,8 @@ export default function CitizensPage() {
       title: 'Семейное положение',
       dataIndex: 'maritalStatus',
       key: 'maritalStatus',
-      render: (status?: MaritalStatus) => (
-        <span>{status ? maritalStatusConfig[status] : '—'}</span>
+      render: (status?: Citizen['maritalStatus']) => (
+        <span>{status ? MARITAL_STATUS_CONFIG[status] : '—'}</span>
       ),
     },
     {
@@ -120,8 +109,8 @@ export default function CitizensPage() {
       dataIndex: 'status',
       key: 'status',
       render: (status: Citizen['status']) => (
-        <Tag color={statusConfig[status].color}>
-          {statusConfig[status].label}
+        <Tag color={STATUS_CONFIG[status].color}>
+          {STATUS_CONFIG[status].label}
         </Tag>
       ),
       filters: [

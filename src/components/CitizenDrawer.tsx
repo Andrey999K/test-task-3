@@ -19,9 +19,20 @@ import {
   UserOutlined,
   WomanOutlined,
 } from "@ant-design/icons";
-import type { Citizen, Document, Education, FamilyMember, MaritalStatus, Property, Work } from "@/types/citizen";
+import type { Citizen, Document, Education, FamilyMember, Property, Work } from "@/types/citizen";
 import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
+import {
+  STATUS_CONFIG,
+  GENDER_CONFIG,
+  MARITAL_STATUS_CONFIG,
+  RELATION_CONFIG,
+  GENDER_OPTIONS,
+  MARITAL_STATUS_OPTIONS,
+  CITIZENSHIP_OPTIONS,
+  NATIONALITY_OPTIONS,
+  BLOOD_TYPE_OPTIONS,
+} from "@/config/citizen-config";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -32,70 +43,6 @@ interface CitizenDrawerProps extends Omit<DrawerProps, 'children'> {
   onSave?: (citizen: Citizen) => void;
 }
 
-const statusConfig: Record<Citizen['status'], { color: string; label: string }> = {
-  active: { color: 'green', label: 'Активен' },
-  pending: { color: 'orange', label: 'На проверке' },
-  archived: { color: 'gray', label: 'Архив' },
-};
-
-const maritalStatusOptions = [
-  { value: 'single', label: 'Не женат/не замужем' },
-  { value: 'married', label: 'Женат/замужем' },
-  { value: 'divorced', label: 'Разведён(а)' },
-  { value: 'widowed', label: 'Вдовец/вдова' },
-];
-
-const genderOptions = [
-  { value: 'male', label: 'Мужской' },
-  { value: 'female', label: 'Женский' },
-];
-
-const citizenshipOptions = [
-  { value: 'РФ', label: 'РФ' },
-  { value: 'СНГ', label: 'СНГ' },
-  { value: 'Другое', label: 'Другое' },
-];
-
-const nationalityOptions = [
-  { value: 'Русский', label: 'Русский' },
-  { value: 'Татарин', label: 'Татарин' },
-  { value: 'Украинец', label: 'Украинец' },
-  { value: 'Башкир', label: 'Башкир' },
-  { value: 'Чуваш', label: 'Чуваш' },
-  { value: 'Другая', label: 'Другая' },
-];
-
-const bloodTypeOptions = [
-  { value: 'I+', label: 'I+' },
-  { value: 'I-', label: 'I-' },
-  { value: 'II+', label: 'II+' },
-  { value: 'II-', label: 'II-' },
-  { value: 'III+', label: 'III+' },
-  { value: 'III-', label: 'III-' },
-  { value: 'IV+', label: 'IV+' },
-  { value: 'IV-', label: 'IV-' },
-];
-
-const maritalStatusConfig: Record<MaritalStatus, string> = {
-  single: 'Не женат/не замужем',
-  married: 'Женат/замужем',
-  divorced: 'Разведён(а)',
-  widowed: 'Вдовец/вдова',
-};
-
-const genderConfig: Record<'male' | 'female', string> = {
-  male: 'Мужской',
-  female: 'Женский',
-};
-
-const relationConfig: Record<string, string> = {
-  'Супруг(а)': 'blue',
-  'Ребёнок': 'green',
-  'Родитель': 'orange',
-  'Брат/Сестра': 'purple',
-  'Другой родственник': 'default',
-};
-
 function FamilyCard({ member }: { member: FamilyMember }) {
   return (
     <Card size="small" className="mb-2">
@@ -104,8 +51,8 @@ function FamilyCard({ member }: { member: FamilyMember }) {
           <Avatar 
             icon={member.relation === 'Супруг(а)' ? (member.surname ? '' : '') : <UserOutlined />}
             style={{ 
-              backgroundColor: relationConfig[member.relation] === 'blue' ? '#1890ff' : 
-                              relationConfig[member.relation] === 'green' ? '#52c41a' : '#faad14'
+              backgroundColor: RELATION_CONFIG[member.relation] === 'blue' ? '#1890ff' : 
+                              RELATION_CONFIG[member.relation] === 'green' ? '#52c41a' : '#faad14'
             }}
           />
           <div>
@@ -116,7 +63,7 @@ function FamilyCard({ member }: { member: FamilyMember }) {
             </div>
           </div>
         </Space>
-        <Tag color={relationConfig[member.relation] || 'default'}>{member.relation}</Tag>
+        <Tag color={RELATION_CONFIG[member.relation] || 'default'}>{member.relation}</Tag>
       </Space>
     </Card>
   );
@@ -237,7 +184,7 @@ export default function CitizenDrawer({ citizen, onClose, onSave, ...drawerProps
     return null;
   }
 
-  const status = statusConfig[citizen.status];
+  const status = STATUS_CONFIG[citizen.status];
   const displayCitizen = isEditing && editedCitizen ? editedCitizen : citizen;
 
   const handleEdit = () => {
@@ -312,7 +259,7 @@ export default function CitizenDrawer({ citizen, onClose, onSave, ...drawerProps
                 {citizen.surname} {citizen.name} {citizen.patronymic}
               </div>
               <div className="text-gray-500">
-                {genderConfig[citizen.gender]} • {formatDate(citizen.birthDate)} 
+                {GENDER_CONFIG[citizen.gender]} • {formatDate(citizen.birthDate)} 
                 {' '} ({Math.floor((new Date().getTime() - new Date(citizen.birthDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000))} лет)
               </div>
               <Space className="mt-2">
@@ -365,16 +312,16 @@ export default function CitizenDrawer({ citizen, onClose, onSave, ...drawerProps
           <Descriptions.Item label="Пол" span={2}>
             {isEditing ? (
               <Form.Item name="gender" noStyle>
-                <Select options={genderOptions} style={{ width: 150 }} />
+                <Select options={GENDER_OPTIONS} style={{ width: 150 }} />
               </Form.Item>
-            ) : genderConfig[displayCitizen.gender]}
+            ) : GENDER_CONFIG[displayCitizen.gender]}
           </Descriptions.Item>
           <Descriptions.Item label="Семейное положение" span={2}>
             {isEditing ? (
               <Form.Item name="maritalStatus" noStyle>
-                <Select options={maritalStatusOptions} style={{ width: 200 }} />
+                <Select options={MARITAL_STATUS_OPTIONS} style={{ width: 200 }} />
               </Form.Item>
-            ) : displayCitizen.maritalStatus ? maritalStatusConfig[displayCitizen.maritalStatus] : '—'}
+            ) : displayCitizen.maritalStatus ? MARITAL_STATUS_CONFIG[displayCitizen.maritalStatus] : '—'}
           </Descriptions.Item>
         </Descriptions>
 
@@ -421,17 +368,17 @@ export default function CitizenDrawer({ citizen, onClose, onSave, ...drawerProps
           <Descriptions title="Дополнительные сведения" bordered column={2} size="small">
             <Descriptions.Item label="Гражданство">
               <Form.Item name="citizenship" noStyle>
-                <Select options={citizenshipOptions} style={{ width: 150 }} allowClear />
+                <Select options={CITIZENSHIP_OPTIONS} style={{ width: 150 }} allowClear />
               </Form.Item>
             </Descriptions.Item>
             <Descriptions.Item label="Национальность">
               <Form.Item name="nationality" noStyle>
-                <Select options={nationalityOptions} style={{ width: 150 }} allowClear />
+                <Select options={NATIONALITY_OPTIONS} style={{ width: 150 }} allowClear />
               </Form.Item>
             </Descriptions.Item>
             <Descriptions.Item label="Группа крови">
               <Form.Item name="bloodType" noStyle>
-                <Select options={bloodTypeOptions} style={{ width: 100 }} allowClear />
+                <Select options={BLOOD_TYPE_OPTIONS} style={{ width: 100 }} allowClear />
               </Form.Item>
             </Descriptions.Item>
             <Descriptions.Item label="Статус">
@@ -459,8 +406,8 @@ export default function CitizenDrawer({ citizen, onClose, onSave, ...drawerProps
               {displayCitizen.bloodType || '—'}
             </Descriptions.Item>
             <Descriptions.Item label="Статус">
-              <Tag color={statusConfig[displayCitizen.status].color}>
-                {statusConfig[displayCitizen.status].label}
+              <Tag color={STATUS_CONFIG[displayCitizen.status].color}>
+                {STATUS_CONFIG[displayCitizen.status].label}
               </Tag>
             </Descriptions.Item>
           </Descriptions>

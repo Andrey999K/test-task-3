@@ -22,6 +22,7 @@ import {
   LineChart,
   Line
 } from 'recharts';
+import { STATUS_CONFIG } from "@/config/citizen-config";
 
 const totalCitizens = citizensData.length;
 const activeCitizens = citizensData.filter((c) => c.status === 'active').length;
@@ -31,12 +32,6 @@ const archivedCitizens = citizensData.filter((c) => c.status === 'archived').len
 const recentCitizens = [...citizensData]
   .sort((a, b) => new Date(b.registrationDate || 0).getTime() - new Date(a.registrationDate || 0).getTime())
   .slice(0, 5);
-
-const statusConfig: Record<Citizen['status'], { color: string; label: string }> = {
-  active: { color: 'green', label: 'Активен' },
-  pending: { color: 'orange', label: 'На проверке' },
-  archived: { color: 'gray', label: 'Архив' },
-};
 
 const statusData = [
   { name: 'Активные', value: activeCitizens, color: '#52c41a' },
@@ -108,7 +103,7 @@ const columns: ColumnsType<Citizen> = [
     dataIndex: 'status',
     key: 'status',
     render: (status: Citizen['status']) => (
-      <Tag color={statusConfig[status].color}>{statusConfig[status].label}</Tag>
+      <Tag color={STATUS_CONFIG[status].color}>{STATUS_CONFIG[status].label}</Tag>
     ),
   },
 ];
