@@ -18,21 +18,21 @@ import { WorkSection } from "@/components/WorkSection";
 type CitizenDrawerProps = {
   open: boolean;
   citizen: Citizen | null;
-  onClose: () => void;
-  onSave?: (citizen: Citizen) => void;
+  onCloseAction: () => void;
+  onSaveAction?: (citizen: Citizen) => void;
 };
 
-export const CitizenDrawer = ({ open, citizen, onClose, onSave }: CitizenDrawerProps) => {
+export const CitizenDrawer = ({ open, citizen, onCloseAction, onSaveAction }: CitizenDrawerProps) => {
   const { form, isEditing, handleEdit, handleCancel, handleSave } = useCitizenDrawer(
     citizen,
-    onSave,
+    onSaveAction,
   );
 
   return (
     <Drawer
       open={open}
       size="large"
-      onClose={onClose}
+      onClose={onCloseAction}
       title={
         citizen && (
           <Space>

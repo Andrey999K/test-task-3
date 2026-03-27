@@ -1,13 +1,20 @@
+"use client";
+
 import { Col, Row } from "antd";
+import dynamic from "next/dynamic";
 
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { AgeChartCard } from "@/components/AgeChartCard";
 import { GenderChartCard } from "@/components/GenderChartCard";
-import { RegistrationsChartCard } from "@/components/RegistrationsChartCard";
 import { RecentActivityCard } from "@/components/RecentActivityCard";
 import { StatusChartCard } from "@/components/StatusChartCard";
 import { RecentCitizensTable } from "@/components/RecentCitizensTable";
 import { StatsCards } from "@/components/StatsCards";
+
+const RegistrationsChartCard = dynamic(
+  () => import("@/components/RegistrationsChartCard").then((mod) => mod.RegistrationsChartCard),
+  { ssr: false },
+);
 
 export default function DashboardPage() {
   const { statusData, genderData, stats, recentCitizens } = useDashboardStats();

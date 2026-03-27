@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+
 import { Card } from "antd";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -18,7 +20,7 @@ const dynamicData = [
   { month: "Дек", registered: 27, archived: 8 },
 ];
 
-export const RegistrationsChartCard = () => {
+const RegistrationsChartCardComponent = () => {
   return (
     <Card title="Динамика регистраций">
       <ResponsiveContainer width="100%" height={250}>
@@ -49,3 +51,5 @@ export const RegistrationsChartCard = () => {
     </Card>
   );
 };
+
+export const RegistrationsChartCard = React.memo(RegistrationsChartCardComponent);

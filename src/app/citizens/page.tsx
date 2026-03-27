@@ -99,7 +99,7 @@ export default function CitizensPage() {
       <CitizenDrawer
         open={!!selectedCitizen}
         citizen={selectedCitizen}
-        onClose={() => setSelectedCitizen(null)}
+        onCloseAction={() => setSelectedCitizen(null)}
       />
     </>
   );

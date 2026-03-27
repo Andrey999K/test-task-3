@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import type { MenuProps } from "antd";
 import { Avatar, Dropdown, Layout, Menu } from "antd";
-import { DashboardOutlined, FileTextOutlined, SettingOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
+import { DashboardOutlined, TeamOutlined, UserOutlined } from "@ant-design/icons";
 import { usePathname, useRouter } from "next/navigation";
 
 const { Header, Content, Sider } = Layout;
@@ -12,49 +12,43 @@ type AppLayoutProps = {
   children: React.ReactNode;
 };
 
-const menuItems: MenuProps['items'] = [
+const menuItems: MenuProps["items"] = [
   {
-    key: '/',
+    key: "/",
     icon: <DashboardOutlined />,
-    label: 'Dashboard',
+    label: "Dashboard",
   },
   {
-    key: '/citizens',
+    key: "/citizens",
     icon: <TeamOutlined />,
-    label: 'Картотека',
-  },
-  {
-    key: '/reports',
-    icon: <FileTextOutlined />,
-    label: 'Отчёты',
-  },
-  {
-    type: 'divider',
-  },
-  {
-    key: '/settings',
-    icon: <SettingOutlined />,
-    label: 'Настройки',
+    label: "Картотека",
   },
 ];
 
-const userMenuItems: MenuProps['items'] = [
+const userMenuItems: MenuProps["items"] = [
   {
-    key: 'profile',
-    label: 'Профиль',
+    key: "profile",
+    label: "Профиль",
   },
   {
-    key: 'logout',
-    label: 'Выйти',
+    key: "logout",
+    label: "Выйти",
   },
 ];
+
+const pageTitles: Record<string, string> = {
+  "/": "Панель управления",
+  "/citizens": "Картотека граждан",
+  "/reports": "Отчёты",
+  "/settings": "Настройки",
+};
 
 const AppLayout = ({ children }: AppLayoutProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleMenuClick: MenuProps['onClick'] = (e) => {
+  const handleMenuClick: MenuProps["onClick"] = (e) => {
     router.push(e.key);
   };
 
@@ -80,19 +74,17 @@ const AppLayout = ({ children }: AppLayoutProps) => {
           selectedKeys={[pathname]}
           items={menuItems}
           onClick={handleMenuClick}
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
         />
       </Sider>
       <Layout className="transition-all duration-200" style={{ marginLeft: 0 }}>
         <Header className="px-6 flex items-center justify-between bg-white border-b border-gray-200">
           <h1 className="text-lg font-medium text-gray-800">
-            {pathname === '/' && 'Панель управления'}
-            {pathname === '/citizens' && 'Картотека граждан'}
-            {pathname === '/reports' && 'Отчёты'}
-            {pathname === '/settings' && 'Настройки'}
+            {pageTitles[pathname] ?? ""}
           </h1>
           <Dropdown menu={{ items: userMenuItems }} placement="bottomRight" arrow>
-            <div className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
+            <div
+              className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 px-3 py-2 rounded-lg transition-colors">
               <Avatar icon={<UserOutlined />} className="bg-blue-500" />
               <span className="text-sm text-gray-700">Администратор</span>
             </div>
