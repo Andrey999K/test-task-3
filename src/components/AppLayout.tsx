@@ -8,9 +8,9 @@ import { usePathname, useRouter } from "next/navigation";
 
 const { Header, Content, Sider } = Layout;
 
-interface AppLayoutProps {
+type AppLayoutProps = {
   children: React.ReactNode;
-}
+};
 
 const menuItems: MenuProps['items'] = [
   {
@@ -49,7 +49,7 @@ const userMenuItems: MenuProps['items'] = [
   },
 ];
 
-export default function AppLayout({ children }: AppLayoutProps) {
+const AppLayout = ({ children }: AppLayoutProps) => {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -104,4 +104,6 @@ export default function AppLayout({ children }: AppLayoutProps) {
       </Layout>
     </Layout>
   );
-}
+};
+
+export default AppLayout;

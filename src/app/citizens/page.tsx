@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React, { useState } from "react";
 import { Button, Card, Input, Pagination, Select, Space, Table, Tag } from "antd";
@@ -8,17 +8,94 @@ import { citizensData } from "@/lib/mock-data";
 import type { Citizen } from "@/types/citizen";
 import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
-import CitizenDrawer from "@/components/CitizenDrawer";
-import {
-  STATUS_CONFIG,
-  MARITAL_STATUS_CONFIG,
-} from "@/config/citizen-config";
+import { MARITAL_STATUS_CONFIG, STATUS_CONFIG } from "@/config/citizen-config";
+import { CitizenDrawer } from "@/components/CitizenDrawer";
+
+// Колонки таблицы
+const columns: ColumnsType<Citizen> = [
+  {
+    title: "ФИО",
+    dataIndex: "fullName",
+    key: "fullName",
+    render: (_: unknown, record: Citizen) => (
+      <Space>
+        <UserOutlined className="text-gray-400" />
+        <span className="font-medium text-gray-900">
+            {record.surname} {record.name} {record.patronymic}
+          </span>
+      </Space>
+    ),
+    sorter: (a, b) => `${a.surname} ${a.name}`.localeCompare(`${b.surname} ${b.name}`),
+  },
+  {
+    title: "Дата рождения",
+    dataIndex: "birthDate",
+    key: "birthDate",
+    render: (date: string) => formatDate(date),
+    sorter: (a, b) => new Date(a.birthDate).getTime() - new Date(b.birthDate).getTime(),
+  },
+  {
+    title: "Пол",
+    dataIndex: "gender",
+    key: "gender",
+    render: (gender: Citizen["gender"]) => (
+      <span>{gender === "male" ? "Мужской" : "Женский"}</span>
+    ),
+    filters: [
+      { text: "Мужской", value: "male" },
+      { text: "Женский", value: "female" },
+    ],
+    onFilter: (value, record) => record.gender === value,
+  },
+  {
+    title: "Телефон",
+    dataIndex: "phone",
+    key: "phone",
+    render: (phone?: string) => (
+      <a href={`tel:${phone?.replace(/\D/g, "")}`}>
+        {phone ? formatPhone(phone) : "—"}
+      </a>
+    ),
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+    render: (email?: string) => (
+      email ? <a href={`mailto:${email}`}>{email}</a> : "—"
+    ),
+  },
+  {
+    title: "Семейное положение",
+    dataIndex: "maritalStatus",
+    key: "maritalStatus",
+    render: (status?: Citizen["maritalStatus"]) => (
+      <span>{status ? MARITAL_STATUS_CONFIG[status] : "—"}</span>
+    ),
+  },
+  {
+    title: "Статус",
+    dataIndex: "status",
+    key: "status",
+    render: (status: Citizen["status"]) => (
+      <Tag color={STATUS_CONFIG[status].color}>
+        {STATUS_CONFIG[status].label}
+      </Tag>
+    ),
+    filters: [
+      { text: "Активен", value: "active" },
+      { text: "На проверке", value: "pending" },
+      { text: "Архив", value: "archived" },
+    ],
+    onFilter: (value, record) => record.status === value,
+  },
+];
 
 export default function CitizensPage() {
-  const [search, setSearch] = useState('');
-  const [statusFilter, setStatusFilter] = useState<Citizen['status'] | undefined>();
-  const [genderFilter, setGenderFilter] = useState<Citizen['gender'] | undefined>();
-  const [maritalStatusFilter, setMaritalStatusFilter] = useState<Citizen['maritalStatus'] | undefined>();
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<Citizen["status"] | undefined>();
+  const [genderFilter, setGenderFilter] = useState<Citizen["gender"] | undefined>();
+  const [maritalStatusFilter, setMaritalStatusFilter] = useState<Citizen["maritalStatus"] | undefined>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [selectedCitizen, setSelectedCitizen] = useState<Citizen | null>(null);
@@ -26,7 +103,7 @@ export default function CitizensPage() {
 
   // Фильтрация данных
   const filteredData = citizensData.filter((citizen) => {
-    const matchesSearch = search === '' ||
+    const matchesSearch = search === "" ||
       `${citizen.surname} ${citizen.name} ${citizen.patronymic}`
         .toLowerCase()
         .includes(search.toLowerCase());
@@ -42,88 +119,8 @@ export default function CitizensPage() {
   const total = filteredData.length;
   const paginatedData = filteredData.slice((page - 1) * pageSize, page * pageSize);
 
-  // Колонки таблицы
-  const columns: ColumnsType<Citizen> = [
-    {
-      title: 'ФИО',
-      dataIndex: 'fullName',
-      key: 'fullName',
-      render: (_: unknown, record: Citizen) => (
-        <Space>
-          <UserOutlined className="text-gray-400" />
-          <span className="font-medium text-gray-900">
-            {record.surname} {record.name} {record.patronymic}
-          </span>
-        </Space>
-      ),
-      sorter: (a, b) => `${a.surname} ${a.name}`.localeCompare(`${b.surname} ${b.name}`),
-    },
-    {
-      title: 'Дата рождения',
-      dataIndex: 'birthDate',
-      key: 'birthDate',
-      render: (date: string) => formatDate(date),
-      sorter: (a, b) => new Date(a.birthDate).getTime() - new Date(b.birthDate).getTime(),
-    },
-    {
-      title: 'Пол',
-      dataIndex: 'gender',
-      key: 'gender',
-      render: (gender: Citizen['gender']) => (
-        <span>{gender === 'male' ? 'Мужской' : 'Женский'}</span>
-      ),
-      filters: [
-        { text: 'Мужской', value: 'male' },
-        { text: 'Женский', value: 'female' },
-      ],
-      onFilter: (value, record) => record.gender === value,
-    },
-    {
-      title: 'Телефон',
-      dataIndex: 'phone',
-      key: 'phone',
-      render: (phone?: string) => (
-        <a href={`tel:${phone?.replace(/\D/g, "")}`}>
-          {phone ? formatPhone(phone) : '—'}
-        </a>
-      ),
-    },
-    {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-      render: (email?: string) => (
-        email ? <a href={`mailto:${email}`}>{email}</a> : '—'
-      ),
-    },
-    {
-      title: 'Семейное положение',
-      dataIndex: 'maritalStatus',
-      key: 'maritalStatus',
-      render: (status?: Citizen['maritalStatus']) => (
-        <span>{status ? MARITAL_STATUS_CONFIG[status] : '—'}</span>
-      ),
-    },
-    {
-      title: 'Статус',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: Citizen['status']) => (
-        <Tag color={STATUS_CONFIG[status].color}>
-          {STATUS_CONFIG[status].label}
-        </Tag>
-      ),
-      filters: [
-        { text: 'Активен', value: 'active' },
-        { text: 'На проверке', value: 'pending' },
-        { text: 'Архив', value: 'archived' },
-      ],
-      onFilter: (value, record) => record.status === value,
-    },
-  ];
-
   const handleResetFilters = () => {
-    setSearch('');
+    setSearch("");
     setStatusFilter(undefined);
     setGenderFilter(undefined);
     setMaritalStatusFilter(undefined);
@@ -158,9 +155,9 @@ export default function CitizensPage() {
               style={{ width: 150 }}
               allowClear
               options={[
-                { value: 'active', label: 'Активен' },
-                { value: 'pending', label: 'На проверке' },
-                { value: 'archived', label: 'Архив' },
+                { value: "active", label: "Активен" },
+                { value: "pending", label: "На проверке" },
+                { value: "archived", label: "Архив" },
               ]}
             />
 
@@ -174,8 +171,8 @@ export default function CitizensPage() {
               style={{ width: 120 }}
               allowClear
               options={[
-                { value: 'male', label: 'Мужской' },
-                { value: 'female', label: 'Женский' },
+                { value: "male", label: "Мужской" },
+                { value: "female", label: "Женский" },
               ]}
             />
 
@@ -189,10 +186,10 @@ export default function CitizensPage() {
               style={{ width: 180 }}
               allowClear
               options={[
-                { value: 'single', label: 'Не женат/не замужем' },
-                { value: 'married', label: 'Женат/замужем' },
-                { value: 'divorced', label: 'Разведён(а)' },
-                { value: 'widowed', label: 'Вдовец/вдова' },
+                { value: "single", label: "Не женат/не замужем" },
+                { value: "married", label: "Женат/замужем" },
+                { value: "divorced", label: "Разведён(а)" },
+                { value: "widowed", label: "Вдовец/вдова" },
               ]}
             />
 
@@ -221,7 +218,7 @@ export default function CitizensPage() {
                 setSelectedCitizen(record);
                 setIsDrawerOpen(true);
               },
-              className: 'cursor-pointer hover:bg-gray-50',
+              className: "cursor-pointer hover:bg-gray-50",
             })}
           />
 
@@ -237,7 +234,7 @@ export default function CitizensPage() {
               }}
               showSizeChanger
               showTotal={(total, range) => `${range[0]}–${range[1]} из ${total}`}
-              pageSizeOptions={['10', '20', '50', '100']}
+              pageSizeOptions={["10", "20", "50", "100"]}
             />
           </div>
         </Card>
