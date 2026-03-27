@@ -3,14 +3,32 @@ import type { Citizen } from "@/types/citizen";
 import type { DashboardStatsType, GenderDataType, StatusDataType } from "@/types/dashboard";
 
 const getStatusData = (citizens: Citizen[]): StatusDataType[] => [
-  { name: "Активные", value: citizens.filter((c) => c.status === "active").length, color: "#52c41a" },
-  { name: "На проверке", value: citizens.filter((c) => c.status === "pending").length, color: "#faad14" },
-  { name: "Архив", value: citizens.filter((c) => c.status === "archived").length, color: "#8c8c8c" },
+  {
+    name: "Активные",
+    value: citizens.filter((c) => c.status === "active").length,
+    color: "#52c41a",
+  },
+  {
+    name: "На проверке",
+    value: citizens.filter((c) => c.status === "pending").length,
+    color: "#faad14",
+  },
+  {
+    name: "Архив",
+    value: citizens.filter((c) => c.status === "archived").length,
+    color: "#8c8c8c",
+  },
 ];
 
 const getGenderData = (citizens: Citizen[]): GenderDataType[] => [
-  { name: "Мужской", value: citizens.filter((c) => c.gender === "male").length },
-  { name: "Женский", value: citizens.filter((c) => c.gender === "female").length },
+  {
+    name: "Мужской",
+    value: citizens.filter((c) => c.gender === "male").length,
+  },
+  {
+    name: "Женский",
+    value: citizens.filter((c) => c.gender === "female").length,
+  },
 ];
 
 const getStats = (statusData: StatusDataType[]): DashboardStatsType => ({
@@ -20,14 +38,16 @@ const getStats = (statusData: StatusDataType[]): DashboardStatsType => ({
   archived: statusData[2].value,
 });
 
-const getRecentCitizens = (citizens: Citizen[]): Citizen[] =>
-  [...citizens]
+const getRecentCitizens = (citizens: Citizen[]): Citizen[] => {
+  return [...citizens]
     .sort(
       (a, b) =>
         new Date(b.registrationDate || 0).getTime() -
         new Date(a.registrationDate || 0).getTime(),
     )
     .slice(0, 5);
+};
+
 
 export const useDashboardStats = () => {
   const statusData = getStatusData(citizensData);

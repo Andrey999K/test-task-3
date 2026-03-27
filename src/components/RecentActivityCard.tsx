@@ -1,7 +1,7 @@
 "use client";
 
-import { Card, Avatar } from "antd";
-import { UserOutlined, FileTextOutlined, CalendarOutlined } from "@ant-design/icons";
+import { Avatar, Card } from "antd";
+import { CalendarOutlined, FileTextOutlined, UserOutlined } from "@ant-design/icons";
 
 type ActivityItem = {
   id: number;
@@ -44,7 +44,7 @@ const getBgColor = (type: ActivityItem["type"]) => {
   }
 };
 
-const RecentActivityCard = () => {
+export const RecentActivityCard = () => {
   return (
     <Card title="Последние действия">
       <div className="space-y-3">
@@ -64,5 +64,3 @@ const RecentActivityCard = () => {
     </Card>
   );
 };
-
-export { RecentActivityCard };

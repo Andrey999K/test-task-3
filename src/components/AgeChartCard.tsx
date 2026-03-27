@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "antd";
-import { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip } from "recharts";
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { getAgeGroup } from "@/utils/age";
 import { citizensData } from "@/lib/mock-data";
 
@@ -17,7 +17,7 @@ const getAgeStats = (): AgeData[] => {
 
 const ageData = getAgeStats();
 
-const AgeChartCard = () => {
+export const AgeChartCard = () => {
   return (
     <Card title="Распределение по возрасту">
       <ResponsiveContainer width="100%" height={200}>
@@ -25,13 +25,12 @@ const AgeChartCard = () => {
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="group" tick={{ fontSize: 11 }} />
           <YAxis tick={{ fontSize: 11 }} />
-          <Tooltip />
+          <Tooltip
+            formatter={(value) => [`Всего: ${value}`]}
+          />
           <Bar dataKey="count" fill="#722ed1" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </Card>
   );
 };
-
-export { AgeChartCard, getAgeStats };
-export type { AgeData };

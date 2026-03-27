@@ -1,16 +1,7 @@
 "use client";
 
 import { Card } from "antd";
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  Legend,
-  Tooltip,
-} from "recharts";
+import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 const dynamicData = [
   { month: "Янв", registered: 25, archived: 5 },
@@ -27,7 +18,7 @@ const dynamicData = [
   { month: "Дек", registered: 27, archived: 8 },
 ];
 
-const RegistrationsChartCard = () => {
+export const RegistrationsChartCard = () => {
   return (
     <Card title="Динамика регистраций">
       <ResponsiveContainer width="100%" height={250}>
@@ -58,5 +49,3 @@ const RegistrationsChartCard = () => {
     </Card>
   );
 };
-
-export { RegistrationsChartCard };

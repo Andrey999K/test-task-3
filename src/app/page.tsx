@@ -1,6 +1,3 @@
-// Smart компонент — оркестрирует данные и layout
-"use client";
-
 import { Col, Row } from "antd";
 
 import { useDashboardStats } from "@/hooks/useDashboardStats";
@@ -9,8 +6,8 @@ import { GenderChartCard } from "@/components/GenderChartCard";
 import { RegistrationsChartCard } from "@/components/RegistrationsChartCard";
 import { RecentActivityCard } from "@/components/RecentActivityCard";
 import { StatusChartCard } from "@/components/StatusChartCard";
-import { RecentCitizensTable } from "@/components/dashboard/RecentCitizensTable";
-import { StatsCards } from "@/components/dashboard/StatsCards";
+import { RecentCitizensTable } from "@/components/RecentCitizensTable";
+import { StatsCards } from "@/components/StatsCards";
 
 export default function DashboardPage() {
   const { statusData, genderData, stats, recentCitizens } = useDashboardStats();

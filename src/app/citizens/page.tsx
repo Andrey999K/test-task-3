@@ -9,12 +9,12 @@ import type { Citizen } from "@/types/citizen";
 import { useCitizensTable } from "@/hooks/useCitizensTable";
 import { CITIZENS_TABLE_COLUMNS } from "@/config/citizens-table-columns";
 import { CitizenDrawer } from "@/components/CitizenDrawer";
+import { STATUS_OPTIONS } from "@/config/citizen-config";
 
-const CitizensPage = () => {
+export default function CitizensPage() {
   const { filters, pagination, total, paginatedData, setPagination, updateFilter, resetFilters } =
     useCitizensTable();
 
-  // Один стейт вместо двух — null = закрыт, Citizen = открыт
   const [selectedCitizen, setSelectedCitizen] = useState<Citizen | null>(null);
 
   return (
@@ -36,11 +36,7 @@ const CitizensPage = () => {
               onChange={(value) => updateFilter("status", value)}
               style={{ width: 150 }}
               allowClear
-              options={[
-                { value: "active", label: "Активен" },
-                { value: "pending", label: "На проверке" },
-                { value: "archived", label: "Архив" },
-              ]}
+              options={STATUS_OPTIONS}
             />
             <Select
               placeholder="Пол"
@@ -108,5 +104,3 @@ const CitizensPage = () => {
     </>
   );
 };
-
-export default CitizensPage;
