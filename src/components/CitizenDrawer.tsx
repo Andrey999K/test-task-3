@@ -19,14 +19,13 @@ import {
   UserOutlined,
   WomanOutlined,
 } from "@ant-design/icons";
-import type { Citizen, Education, FamilyMember, Property, Work } from "@/types/citizen";
+import type { Citizen, Education, Property, Work } from "@/types/citizen";
 import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
 import {
   STATUS_CONFIG,
   GENDER_CONFIG,
   MARITAL_STATUS_CONFIG,
-  RELATION_CONFIG,
   GENDER_OPTIONS,
   MARITAL_STATUS_OPTIONS,
   CITIZENSHIP_OPTIONS,
@@ -34,6 +33,7 @@ import {
   BLOOD_TYPE_OPTIONS,
 } from "@/config/citizen-config";
 import { DocumentCard } from "@/components/UI/DocumentCard";
+import { FamilyCard } from "@/components/UI/FamilyCard";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -42,32 +42,6 @@ interface CitizenDrawerProps extends Omit<DrawerProps, 'children'> {
   citizen: Citizen | null;
   onClose: () => void;
   onSave?: (citizen: Citizen) => void;
-}
-
-function FamilyCard({ member }: { member: FamilyMember }) {
-  return (
-    <Card size="small" className="mb-2">
-      <Space align="start" className="w-full justify-between">
-        <Space>
-          <Avatar 
-            icon={member.relation === 'Супруг(а)' ? (member.surname ? '' : '') : <UserOutlined />}
-            style={{ 
-              backgroundColor: RELATION_CONFIG[member.relation] === 'blue' ? '#1890ff' : 
-                              RELATION_CONFIG[member.relation] === 'green' ? '#52c41a' : '#faad14'
-            }}
-          />
-          <div>
-            <Text strong>{member.surname} {member.name} {member.patronymic}</Text>
-            <div className="text-xs text-gray-500">
-              {member.birthDate && formatDate(member.birthDate)}
-              {member.phone && <span> • {formatPhone(member.phone)}</span>}
-            </div>
-          </div>
-        </Space>
-        <Tag color={RELATION_CONFIG[member.relation] || 'default'}>{member.relation}</Tag>
-      </Space>
-    </Card>
-  );
 }
 
 function EducationCard({ edu }: { edu: Education }) {
