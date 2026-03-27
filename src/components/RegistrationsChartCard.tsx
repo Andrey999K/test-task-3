@@ -9,6 +9,7 @@ import {
   XAxis,
   YAxis,
   Legend,
+  Tooltip,
 } from "recharts";
 
 const dynamicData = [
@@ -35,6 +36,7 @@ const RegistrationsChartCard = () => {
           <XAxis dataKey="month" />
           <YAxis />
           <Legend />
+          <Tooltip />
           <Line
             type="monotone"
             dataKey="registered"

@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "antd";
-import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 
 type GenderData = { name: string; value: number };
 
@@ -30,6 +30,7 @@ const GenderChartCard = ({ data }: GenderChartCardProps) => {
               <Cell key={`cell-${index}`} fill={colors[index]} />
             ))}
           </Pie>
+          <Tooltip />
         </PieChart>
       </ResponsiveContainer>
       <div className="flex justify-center gap-4 mt-2">

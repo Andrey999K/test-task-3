@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "antd";
-import { ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 
 type ChartData = { name: string; value: number; color: string };
 
@@ -28,6 +28,7 @@ const StatusChartCard = ({ data }: StatusChartCardProps) => {
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
+          <Tooltip />
         </PieChart>
       </ResponsiveContainer>
       <div className="flex justify-center gap-4 mt-2">
