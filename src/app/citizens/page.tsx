@@ -7,7 +7,7 @@ import type { Citizen } from "@/types/citizen";
 import { useCitizensTable } from "@/hooks/useCitizensTable";
 import { CitizenDrawer } from "@/components/CitizenDrawer";
 
-const CitizensPage = () => {
+export default function CitizensPage() {
   const {
     filters,
     pagination,
@@ -132,5 +132,3 @@ const CitizensPage = () => {
     </>
   );
 };
-
-export default CitizensPage;
