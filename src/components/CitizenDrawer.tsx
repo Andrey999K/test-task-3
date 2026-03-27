@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import type { DrawerProps } from "antd";
-import { Avatar, Button, Card, Descriptions, Drawer, Form, Input, Select, Space, Tag, Typography } from "antd";
+import { Button, Card, Descriptions, Drawer, Form, Input, Select, Space, Tag, Typography } from "antd";
 import {
   BankOutlined,
   BookOutlined,
@@ -12,10 +12,8 @@ import {
   FileTextOutlined,
   HeartOutlined,
   HomeOutlined,
-  ManOutlined,
   SaveOutlined,
   UserOutlined,
-  WomanOutlined,
 } from "@ant-design/icons";
 import type { Citizen } from "@/types/citizen";
 import { formatDate } from "@/utils/format-date";
@@ -35,6 +33,7 @@ import { FamilyCard } from "@/components/UI/FamilyCard";
 import { EducationCard } from "@/components/UI/EducationCard";
 import { WorkCard } from "@/components/UI/WorkCard";
 import { PropertyCard } from "@/components/UI/PropertyCard";
+import { ProfileHeader } from "@/components/UI/ProfileHeader";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -54,7 +53,6 @@ export default function CitizenDrawer({ citizen, onClose, onSave, ...drawerProps
     return null;
   }
 
-  const status = STATUS_CONFIG[citizen.status];
   const displayCitizen = isEditing && editedCitizen ? editedCitizen : citizen;
 
   const handleEdit = () => {
@@ -113,36 +111,9 @@ export default function CitizenDrawer({ citizen, onClose, onSave, ...drawerProps
     >
       <Form form={form} layout="vertical">
         <Space orientation="vertical" size="middle" className="w-full">
-        {/* Профиль */}
-        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50">
-          <Space size="large" className="w-full">
-            <Avatar 
-              size={80} 
-              icon={citizen.gender === 'male' ? <ManOutlined /> : <WomanOutlined />}
-              style={{ 
-                backgroundColor: citizen.gender === 'male' ? '#1890ff' : '#eb2f96',
-                fontSize: '32px'
-              }}
-            />
-            <div>
-              <div className="text-xl font-semibold">
-                {citizen.surname} {citizen.name} {citizen.patronymic}
-              </div>
-              <div className="text-gray-500">
-                {GENDER_CONFIG[citizen.gender]} • {formatDate(citizen.birthDate)} 
-                {' '} ({Math.floor((new Date().getTime() - new Date(citizen.birthDate).getTime()) / (365.25 * 24 * 60 * 60 * 1000))} лет)
-              </div>
-              <Space className="mt-2">
-                <Tag color={status.color} className="text-sm">{status.label}</Tag>
-                {citizen.citizenship && <Tag>{citizen.citizenship}</Tag>}
-                {citizen.nationality && <Tag>{citizen.nationality}</Tag>}
-                {citizen.bloodType && <Tag color="red">{citizen.bloodType}</Tag>}
-              </Space>
-            </div>
-          </Space>
-        </Card>
+          <ProfileHeader citizen={citizen} />
 
-        {/* Личные данные */}
+          {/* Личные данные */}
         <Descriptions title="Личные данные" bordered column={2} size="small">
           <Descriptions.Item label="Фамилия">
             {isEditing ? (
