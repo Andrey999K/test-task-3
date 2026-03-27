@@ -19,7 +19,7 @@ import {
   UserOutlined,
   WomanOutlined,
 } from "@ant-design/icons";
-import type { Citizen, Document, Education, FamilyMember, Property, Work } from "@/types/citizen";
+import type { Citizen, Education, FamilyMember, Property, Work } from "@/types/citizen";
 import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
 import {
@@ -33,6 +33,7 @@ import {
   NATIONALITY_OPTIONS,
   BLOOD_TYPE_OPTIONS,
 } from "@/config/citizen-config";
+import { DocumentCard } from "@/components/UI/DocumentCard";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -64,27 +65,6 @@ function FamilyCard({ member }: { member: FamilyMember }) {
           </div>
         </Space>
         <Tag color={RELATION_CONFIG[member.relation] || 'default'}>{member.relation}</Tag>
-      </Space>
-    </Card>
-  );
-}
-
-function DocumentCard({ doc }: { doc: Document }) {
-  return (
-    <Card size="small" className="mb-2">
-      <Space align="start" className="w-full justify-between">
-        <Space>
-          <Avatar icon={<FileTextOutlined />} className="bg-blue-500" />
-          <div>
-            <Text strong>{doc.type}</Text>
-            <div className="text-xs text-gray-500">
-              Серия {doc.series} №{doc.number}
-            </div>
-            <div className="text-xs text-gray-500">
-              Выдан: {doc.issuer} {doc.issueDate && formatDate(doc.issueDate)}
-            </div>
-          </div>
-        </Space>
       </Space>
     </Card>
   );
