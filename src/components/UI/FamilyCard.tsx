@@ -9,9 +9,9 @@ import { RELATION_CONFIG } from "@/config/citizen-config";
 
 const { Text } = Typography;
 
-interface FamilyCardProps {
+type FamilyCardProps = {
   member: FamilyMember;
-}
+};
 
 export const FamilyCard = ({ member }: FamilyCardProps) => {
   const bgColor = RELATION_CONFIG[member.relation] === 'blue' ? '#1890ff' : 

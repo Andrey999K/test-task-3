@@ -7,9 +7,9 @@ import { formatDate } from "@/utils/format-date";
 
 const { Text } = Typography;
 
-interface DocumentCardProps {
+type DocumentCardProps = {
   doc: Document;
-}
+};
 
 export const DocumentCard = ({ doc }: DocumentCardProps) => (
   <Card size="small" className="mb-2">

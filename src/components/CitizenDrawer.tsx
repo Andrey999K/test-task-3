@@ -19,7 +19,7 @@ import {
   UserOutlined,
   WomanOutlined,
 } from "@ant-design/icons";
-import type { Citizen, Education, Property, Work } from "@/types/citizen";
+import type { Citizen, Property, Work } from "@/types/citizen";
 import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
 import {
@@ -34,6 +34,7 @@ import {
 } from "@/config/citizen-config";
 import { DocumentCard } from "@/components/UI/DocumentCard";
 import { FamilyCard } from "@/components/UI/FamilyCard";
+import { EducationCard } from "@/components/UI/EducationCard";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -42,28 +43,6 @@ interface CitizenDrawerProps extends Omit<DrawerProps, 'children'> {
   citizen: Citizen | null;
   onClose: () => void;
   onSave?: (citizen: Citizen) => void;
-}
-
-function EducationCard({ edu }: { edu: Education }) {
-  return (
-    <Card size="small" className="mb-2">
-      <Space align="start" className="w-full justify-between">
-        <Space>
-          <Avatar icon={<BookOutlined />} className="bg-purple-500" />
-          <div>
-            <Text strong>{edu.institution}</Text>
-            <div className="text-xs text-gray-500">
-              {edu.faculty} факультет
-            </div>
-            <div className="text-xs text-gray-500">
-              {edu.specialization} • {edu.startYear}–{edu.endYear || 'н.в.'}
-            </div>
-          </div>
-        </Space>
-        <Tag color="purple">{edu.level}</Tag>
-      </Space>
-    </Card>
-  );
 }
 
 function WorkCard({ work }: { work: Work }) {
