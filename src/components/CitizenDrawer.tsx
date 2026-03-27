@@ -12,14 +12,12 @@ import {
   FileTextOutlined,
   HeartOutlined,
   HomeOutlined,
-  LaptopOutlined,
   ManOutlined,
-  PhoneOutlined,
   SaveOutlined,
   UserOutlined,
   WomanOutlined,
 } from "@ant-design/icons";
-import type { Citizen, Property, Work } from "@/types/citizen";
+import type { Citizen } from "@/types/citizen";
 import { formatDate } from "@/utils/format-date";
 import { formatPhone } from "@/utils/format-phone";
 import {
@@ -35,6 +33,8 @@ import {
 import { DocumentCard } from "@/components/UI/DocumentCard";
 import { FamilyCard } from "@/components/UI/FamilyCard";
 import { EducationCard } from "@/components/UI/EducationCard";
+import { WorkCard } from "@/components/UI/WorkCard";
+import { PropertyCard } from "@/components/UI/PropertyCard";
 
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -43,69 +43,6 @@ interface CitizenDrawerProps extends Omit<DrawerProps, 'children'> {
   citizen: Citizen | null;
   onClose: () => void;
   onSave?: (citizen: Citizen) => void;
-}
-
-function WorkCard({ work }: { work: Work }) {
-  return (
-    <Card size="small" className="mb-2">
-      <Space align="start" className="w-full justify-between">
-        <Space>
-          <Avatar icon={<LaptopOutlined />} className="bg-orange-500" />
-          <div>
-            <Text strong>{work.organization}</Text>
-            <div className="text-xs text-gray-500">
-              {work.position}
-            </div>
-            <div className="text-xs text-gray-500">
-              {work.department && `${work.department} • `}{formatDate(work.startDate)} – {work.endDate ? formatDate(work.endDate) : 'н.в.'}
-            </div>
-          </div>
-        </Space>
-        {work.phone && (
-          <Text type="secondary" className="text-xs">
-            <PhoneOutlined /> {formatPhone(work.phone)}
-          </Text>
-        )}
-      </Space>
-    </Card>
-  );
-}
-
-function PropertyCard({ prop }: { prop: Property }) {
-  const statusColors: Record<string, string> = {
-    'Собственность': 'green',
-    'Аренда': 'blue',
-    'Социальный найм': 'orange',
-    'Долевое участие': 'purple',
-  };
-  
-  return (
-    <Card size="small" className="mb-2">
-      <Space align="start" className="w-full justify-between">
-        <Space>
-          <Avatar icon={<HomeOutlined />} className="bg-cyan-500" />
-          <div>
-            <Text strong>{prop.type}</Text>
-            <div className="text-xs text-gray-500">
-              {prop.address}
-            </div>
-            {prop.area && (
-              <div className="text-xs text-gray-500">
-                Площадь: {prop.area} м²
-                {prop.share && prop.share < 1 && ` • Доля: ${(prop.share * 100).toFixed(0)}%`}
-              </div>
-            )}
-            {prop.estimatedValue && (
-              <div className="text-xs text-gray-500">
-                Стоимость: {prop.estimatedValue.toLocaleString('ru-RU')} ₽
-              </div>
-            )}
-          </div>
-        </Space>
-        <Tag color={statusColors[prop.status] || 'default'}>{prop.status}</Tag>
-      </Space>
-    </Card>
-  );
 }
 
 export default function CitizenDrawer({ citizen, onClose, onSave, ...drawerProps }: CitizenDrawerProps) {
