@@ -1,4 +1,5 @@
-// Dumb компонент — columns внутри, т.к. они принадлежат только этому UI
+"use client";
+
 import { Card, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
@@ -25,8 +26,8 @@ const columns: ColumnsType<Citizen> = [
     key: "status",
     render: (status: Citizen["status"]) => (
       <span style={{ color: STATUS_CONFIG[status].color }}>
-            {STATUS_CONFIG[status].label}
-          </span>
+        {STATUS_CONFIG[status].label}
+      </span>
     ),
   },
 ];
