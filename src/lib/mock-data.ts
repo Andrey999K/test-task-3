@@ -35,7 +35,7 @@ const faculties = ['Экономический', 'Юридический', 'Ин
 const specializations = ['Экономист', 'Юрист', 'Инженер', 'Врач', 'Учитель', 'Менеджер', 'Программист', 'Бухгалтер'];
 const positions = ['Директор', 'Менеджер', 'Специалист', 'Ведущий специалист', 'Начальник отдела', 'Инженер', 'Бухгалтер', 'Секретарь'];
 
-function generateDocument(): Document {
+const generateDocument = (): Document => {
   const type = faker.helpers.arrayElement(documentTypes);
   return {
     id: faker.string.uuid(),
@@ -46,9 +46,9 @@ function generateDocument(): Document {
     expiryDate: type === 'Паспорт' ? undefined : faker.date.future({ years: 5 }).toISOString().split('T')[0],
     issuer: `${faker.location.city()}, ${faker.helpers.arrayElement(['ОВД', 'УФМС', 'МВД'])}`,
   };
-}
+};
 
-function generateFamilyMember(gender: 'male' | 'female'): FamilyMember {
+const generateFamilyMember = (gender: 'male' | 'female'): FamilyMember => {
   const relation = faker.helpers.arrayElement(relativeTypes);
   const memberGender = relation === 'Супруг(а)' ? (gender === 'male' ? 'female' : 'male') : faker.helpers.arrayElement(['male', 'female'] as const);
   return {
@@ -63,9 +63,9 @@ function generateFamilyMember(gender: 'male' | 'female'): FamilyMember {
     relation,
     phone: faker.helpers.maybe(() => faker.phone.number({ style: 'international' }), { probability: 0.5 }) ?? undefined,
   };
-}
+};
 
-function generateEducation(): Education {
+const generateEducation = (): Education => {
   const level = faker.helpers.arrayElement(educationLevels);
   const startYear = faker.number.int({ min: 1970, max: 2020 });
   return {
@@ -78,9 +78,9 @@ function generateEducation(): Education {
     endYear: level === 'Учёная степень' ? startYear + 8 : startYear + 5,
     diplomaNumber: `№${faker.string.numeric(6)}`,
   };
-}
+};
 
-function generateWork(): Work {
+const generateWork = (): Work => {
   const startDate = faker.date.past({ years: 15 });
   return {
     id: faker.string.uuid(),
@@ -92,9 +92,9 @@ function generateWork(): Work {
     address: `${faker.helpers.arrayElement(cities)}, ${faker.helpers.arrayElement(moscowStreets)} ул., д. ${faker.string.numeric(3)}`,
     phone: faker.phone.number({ style: 'international' }),
   };
-}
+};
 
-function generateProperty(): Property {
+const generateProperty = (): Property => {
   return {
     id: faker.string.uuid(),
     type: faker.helpers.arrayElement(propertyTypes),
@@ -105,9 +105,9 @@ function generateProperty(): Property {
     share: faker.helpers.maybe(() => faker.number.float({ min: 0.1, max: 1, fractionDigits: 2 }), { probability: 0.7 }) ?? undefined,
     estimatedValue: faker.number.int({ min: 1000000, max: 50000000 }),
   };
-}
+};
 
-function generateCitizen(): Citizen {
+const generateCitizen = (): Citizen => {
   const gender = faker.helpers.arrayElement(['male', 'female'] as const);
   const firstName = faker.person.firstName(gender);
   const lastName = faker.person.lastName(gender);
@@ -124,8 +124,8 @@ function generateCitizen(): Citizen {
   
   const maritalStatus = faker.helpers.arrayElement(['single', 'married', 'divorced', 'widowed'] as const);
   const hasSpouse = maritalStatus === 'married';
-  
-  const baseCitizen: Citizen = {
+
+  return {
     id: faker.string.uuid(),
     surname: lastName,
     name: firstName,
@@ -141,7 +141,7 @@ function generateCitizen(): Citizen {
     citizenship: faker.helpers.arrayElement(citizenships),
     nationality: faker.helpers.arrayElement(['Русский', 'Татарин', 'Украинец', 'Башкир', 'Чуваш', 'Другая'] as const),
     bloodType: faker.helpers.arrayElement(bloodTypes),
-    
+
     passportSeries: faker.string.numeric(4),
     passportNumber: faker.string.numeric(6),
     passportIssueDate,
@@ -149,7 +149,7 @@ function generateCitizen(): Citizen {
     passportCode: `${faker.string.numeric(3)}-${faker.string.numeric(3)}`,
     inn: `${faker.string.numeric(4)}${faker.string.numeric(6)}${faker.string.numeric(2)}${faker.string.numeric(1)}`,
     snils: `${faker.string.numeric(3)}-${faker.string.numeric(3)}-${faker.string.numeric(3)} ${faker.string.numeric(2)}`,
-    
+
     documents: faker.helpers.arrayElements([generateDocument(), generateDocument()], { min: 1, max: 2 }),
     family: [
       ...(hasSpouse ? [generateFamilyMember(gender)] : []),
@@ -161,19 +161,17 @@ function generateCitizen(): Citizen {
     education: faker.helpers.arrayElements([generateEducation(), generateEducation()], { min: 1, max: 2 }),
     workHistory: faker.helpers.arrayElements([generateWork(), generateWork(), generateWork()], { min: 1, max: 3 }),
     property: faker.helpers.arrayElements([generateProperty(), generateProperty()], { min: 0, max: 2 }),
-    
+
     status: faker.helpers.arrayElement(['active', 'archived', 'pending'] as const),
     registrationDate: faker.date.past({ years: 3 }).toISOString().split('T')[0],
     lastModifiedDate: faker.date.recent({ days: 30 }).toISOString().split('T')[0],
     notes: faker.helpers.maybe(() => faker.lorem.sentence(), { probability: 0.3 }) ?? undefined,
   };
-  
-  return baseCitizen;
-}
+};
 
-export function generateCitizens(count: number): Citizen[] {
+export const generateCitizens = (count: number): Citizen[] => {
   return Array.from({ length: count }, () => generateCitizen());
-}
+};
 
 // Генерируем 100 записей для примера
 faker.seed(56);
