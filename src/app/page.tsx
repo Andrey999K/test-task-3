@@ -4,15 +4,15 @@ import { Col, Row } from "antd";
 import dynamic from "next/dynamic";
 
 import { useDashboardStats } from "@/hooks/useDashboardStats";
-import { AgeChartCard } from "@/components/AgeChartCard";
-import { GenderChartCard } from "@/components/GenderChartCard";
-import { RecentActivityCard } from "@/components/RecentActivityCard";
-import { StatusChartCard } from "@/components/StatusChartCard";
-import { RecentCitizensTable } from "@/components/RecentCitizensTable";
-import { StatsCards } from "@/components/StatsCards";
+import { AgeChartCard } from "@/components/dashboard/charts/AgeChartCard";
+import { GenderChartCard } from "@/components/dashboard/charts/GenderChartCard";
+import { RecentActivityCard } from "@/components/dashboard/RecentActivityCard";
+import { StatusChartCard } from "@/components/dashboard/charts/StatusChartCard";
+import { RecentCitizensTable } from "@/components/dashboard/RecentCitizensTable";
+import { StatsCards } from "@/components/dashboard/StatsCards";
 
 const RegistrationsChartCard = dynamic(
-  () => import("@/components/RegistrationsChartCard").then((mod) => mod.RegistrationsChartCard),
+  () => import("@/components/dashboard/charts/RegistrationsChartCard").then((mod) => mod.RegistrationsChartCard),
   { ssr: false },
 );
 
