@@ -8,7 +8,7 @@ import { SearchOutlined, UserAddOutlined } from "@ant-design/icons";
 import type { Citizen } from "@/types/citizen";
 import { useCitizensTable } from "@/hooks/useCitizensTable";
 import { CITIZENS_TABLE_COLUMNS } from "@/config/citizens-table-columns";
-import { CitizenDrawer } from "@/components/CitizenDrawer";
+import { CitizenDrawer } from "@/components/citizens/CitizenDrawer";
 import { STATUS_OPTIONS } from "@/config/citizen-config";
 
 export default function CitizensPage() {

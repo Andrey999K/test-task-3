@@ -5,15 +5,15 @@ import { CloseOutlined, DeleteOutlined, EditOutlined, SaveOutlined, UserOutlined
 
 import type { Citizen } from "@/types/citizen";
 import { useCitizenDrawer } from "@/hooks/useCitizenDrawer";
-import { AdditionalSection } from "@/components/AdditionalSection";
-import { ContactInfoSection } from "@/components/ContactInfoSection";
-import { DocumentsSection } from "@/components/DocumentsSection";
-import { EducationSection } from "@/components/EducationSection";
-import { FamilySection } from "@/components/FamilySection";
-import { PersonalInfoSection } from "@/components/PersonalInfoSection";
-import { ProfileHeader } from "@/components/ProfileHeader";
-import { PropertySection } from "@/components/PropertySection";
-import { WorkSection } from "@/components/WorkSection";
+import { AdditionalSection } from "./sections/AdditionalSection";
+import { ContactInfoSection } from "./sections/ContactInfoSection";
+import { DocumentsSection } from "./sections/DocumentsSection";
+import { EducationSection } from "./sections/EducationSection";
+import { FamilySection } from "./sections/FamilySection";
+import { PersonalInfoSection } from "./sections/PersonalInfoSection";
+import { ProfileHeader } from "./ProfileHeader";
+import { PropertySection } from "./sections/PropertySection";
+import { WorkSection } from "./sections/WorkSection";
 
 type CitizenDrawerProps = {
   open: boolean;

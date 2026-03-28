@@ -4,7 +4,7 @@ import { ConfigProvider, theme } from "antd";
 import ruRU from "antd/locale/ru_RU";
 import "./globals.css";
 import { ReactNode } from "react";
-import AppLayout from "@/components/AppLayout";
+import AppLayout from "@/components/layout/AppLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
