@@ -3,7 +3,7 @@
 import { Card, Descriptions, Space, Tag, Typography } from "antd";
 import { FileTextOutlined } from "@ant-design/icons";
 import type { Citizen } from "@/types/citizen";
-import { DocumentCard } from "./DocumentCard";
+import { DocumentCard } from "../cards/DocumentCard";
 
 const { Text } = Typography;
 

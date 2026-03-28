@@ -3,7 +3,7 @@
 import { Card, Space, Tag, Typography } from "antd";
 import { HeartOutlined } from "@ant-design/icons";
 import type { Citizen } from "@/types/citizen";
-import { FamilyCard } from "./FamilyCard";
+import { FamilyCard } from "../cards/FamilyCard";
 
 const { Text } = Typography;
 
